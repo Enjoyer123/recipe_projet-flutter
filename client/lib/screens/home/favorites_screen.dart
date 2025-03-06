@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../services/api_service.dart';
-import '../../widgets/meal_card.dart';
-import 'detail_screen.dart';
+import 'detail_user_screen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class FavoritesScreen extends StatefulWidget {
@@ -24,7 +23,7 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
   Future<void> _loadToken() async {
     final prefs = await SharedPreferences.getInstance();
     sharedToken = prefs.getString('token');
-    print(sharedToken);
+
     if (sharedToken != null) {
       WidgetsBinding.instance.addPostFrameCallback((_) {
         Provider.of<ApiService>(context, listen: false)
@@ -46,7 +45,8 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
               itemBuilder: (context, index) {
                 final meal = apiService.favorites[index];
                 return Card(
-                  margin: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                  margin:
+                      const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
                   child: ListTile(
                     leading: ClipRRect(
                       borderRadius: BorderRadius.circular(8),

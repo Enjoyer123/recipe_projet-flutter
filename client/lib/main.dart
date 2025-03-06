@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'screens/home/home_screen.dart';
 import 'services/api_service.dart';
-import 'screens/auth/register_screen.dart';
+import 'screens/auth/login_screen.dart';
+
 void main() {
   runApp(const RecipeFinderApp());
 }
@@ -21,7 +21,7 @@ class RecipeFinderApp extends StatelessWidget {
         title: 'Recipe Finder',
         theme: ThemeData(primarySwatch: Colors.orange),
         // home: const HomeScreen(),
-        home: const RegisterScreen(),
+        home: const LoginScreen(),
       ),
     );
   }

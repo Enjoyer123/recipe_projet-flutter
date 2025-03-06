@@ -5,7 +5,7 @@ const authMiddleware = (req, res, next) => {
 
     if (!token) return res.status(401).json({ error: "Unauthorized" });
 
-    const bearerToken = token.split(" ")[1]; 
+    const bearerToken = token.split(" ")[1];
 
     if (!bearerToken) return res.status(401).json({ error: "Unauthorized" });
 

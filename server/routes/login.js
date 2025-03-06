@@ -4,9 +4,6 @@ const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const router = express.Router();
 
-
-
-process.env.
 router.post("/register", async (req, res) => {
     const { name, email, password } = req.body;
     console.log(req.body)
@@ -17,14 +14,14 @@ router.post("/register", async (req, res) => {
         }
 
         const hashedPassword = await bcrypt.hash(password, 10);
-        console.log("hashedPassword",hashedPassword)
+        console.log("hashedPassword", hashedPassword)
 
         const newUser = await User.create({ name, email, password: hashedPassword });
-        console.log("new",newUser)
+        console.log("new", newUser)
 
         res.json({ message: "User registered successfully" });
     } catch (error) {
-      console.error("Error during registration:", error);
+        console.error("Error during registration:", error);
 
         res.status(500).json({ error: "Server error" });
     }
@@ -41,20 +38,20 @@ router.post("/login", async (req, res) => {
 
         const token = jwt.sign({ userId: user._id, email: user.email }, process.env.SECRET_KEY, { expiresIn: "1h" });
 
-        res.json({ token, user: { email: user.email, name: user.name } });
+        res.json({ token, user: { email: user.email, name: user.name, _id: user._id } });
     } catch (error) {
         res.status(500).json({ error: "Server error" });
     }
 });
 
 
-router.get(`/`, async (req, res) =>{
-  const userList = await User.find();
+router.get(`/`, async (req, res) => {
+    const userList = await User.find();
 
-  if(!userList) {
-      res.status(500).json({success: false})
-  } 
-  res.send(userList);
+    if (!userList) {
+        res.status(500).json({ success: false })
+    }
+    res.send(userList);
 })
 
 module.exports = router;
