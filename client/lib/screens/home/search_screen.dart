@@ -17,9 +17,8 @@ class _SearchScreenState extends State<SearchScreen> {
   
   void initState() {
     super.initState();
-    // ล้างค่าการค้นหาเมื่อเปิดหน้าค้นหาใหม่
+  
     _searchController.clear();
-// ใช้ addPostFrameCallback เพื่อให้แน่ใจว่า context พร้อมก่อนเรียก provider
     WidgetsBinding.instance.addPostFrameCallback((_) {
       Provider.of<ApiService>(context, listen: false).clearsearch();
     });
@@ -45,45 +44,24 @@ class _SearchScreenState extends State<SearchScreen> {
                 decoration: InputDecoration(
                   hintText: 'Search...',
                   filled:
-                      true, // This enables the background color of the TextField
+                      true, 
                   fillColor: const Color.fromARGB(
-                      255, 255, 255, 255), // Change this to your desired color
+                      255, 255, 255, 255), 
                   suffixIcon: IconButton(
                     icon: const Icon(Icons.search),
                     onPressed: () {
                       apiService.fetchMealsFromRecipeDb(_searchController.text);
                     },
                   ),
-                  focusedBorder: UnderlineInputBorder(
+                  focusedBorder: const UnderlineInputBorder(
                     borderSide: BorderSide(
-                      color: const Color(0xFFEE4C74), // Color of the underline when focused
-                      width: 2.0, // Underline width when focused
+                      color: Color(0xFFEE4C74),
+                      width: 2.0, 
                     ),
                   ),
                 ),
               )),
           
-          // Expanded(
-          //   child: apiService.meals.isEmpty
-          //       ? const Center(child: Text('Search for a recipe!'))
-          //       : ListView.builder(
-          //           itemCount: apiService.meals.length,
-          //           itemBuilder: (context, index) {
-          //             final meal = apiService.meals[index];
-          //             return GestureDetector(
-          //               onTap: () async {
-          //                 Navigator.push(
-          //                   context,
-          //                   MaterialPageRoute(
-          //                       builder: (_) => DetailScreen(meal: meal)),
-          //                 );
-          //               },
-          //               child: MealCard(meal: meal),
-          //             );
-          //           },
-          //         ),
-          // ),
-
           Expanded(
             child: apiService.meals.isEmpty
                 ? const Center(child: Text('Search for a recipe!'))

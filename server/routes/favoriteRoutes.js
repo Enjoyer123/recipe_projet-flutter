@@ -4,6 +4,7 @@ const authMiddleware = require('../middleware/auth');
 
 const router = express.Router();
 
+//note
 router.post('/:mealId/:userId', async (req, res) => {
   const { mealId, userId } = req.params;
   const { note } = req.body;
@@ -25,7 +26,6 @@ router.post('/:mealId/:userId', async (req, res) => {
     res.status(500).json({ message: "Internal Server Error" });
   }
 });
-
 
 
 router.put('/:mealId/:userId/note/:noteIndex', async (req, res) => {
@@ -82,6 +82,7 @@ router.delete('/:mealId/:userId/note/:noteIndex', async (req, res) => {
   }
 });
 
+//favorite
 router.post('/', async (req, res) => {
   const { recipeId } = req.body;
 
@@ -145,7 +146,6 @@ router.get(`/`, authMiddleware, async (req, res) => {
 });
 
 
-
 router.get('/:recipeId', async (req, res) => {
   const { recipeId } = req.params;
 
@@ -162,7 +162,6 @@ router.get('/:recipeId', async (req, res) => {
     res.status(500).json({ message: 'Error checking favorite in MongoDB', error: error });
   }
 });
-
 
 
 router.delete('/:id', async (req, res) => {
