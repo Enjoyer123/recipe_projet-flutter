@@ -52,11 +52,18 @@ class _CategoryMealsScreenState extends State<CategoryMealsScreen> {
     final apiService = Provider.of<ApiService>(context);
 
     return Scaffold(
+      backgroundColor: const Color(0xFFE3AFBC),
       appBar: AppBar(
         title: Text('${widget.category} Meals'),
+        backgroundColor: const Color.fromARGB(255, 255, 255, 255),
       ),
       body: isLoading
-          ? const Center(child: CircularProgressIndicator())
+          ? const Center(
+              child: CircularProgressIndicator(
+                valueColor: AlwaysStoppedAnimation<Color>(
+                    Color(0xFFEE4C74)), // กำหนดสีที่ต้องการ
+              ),
+            )
           : meals.isEmpty
               ? const Center(child: Text('No meals found for this category'))
               : GridView.builder(

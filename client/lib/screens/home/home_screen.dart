@@ -22,15 +22,26 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   bool _isLoggedIn = false;
 
-  // List of categories (Initially empty, will be populated from API)
   List<String> categories = [];
-
+  String _userName = '';
   @override
   void initState() {
+    final apiService = Provider.of<ApiService>(context, listen: false);
+
     super.initState();
+    _fetchUserName();
     _checkLoginStatus();
-    Provider.of<ApiService>(context, listen: false).fetchRandomMeals();
-    _fetchCategories();  // Fetch categories from the API
+    apiService.fetchRandomMeals();
+    _fetchCategories();
+    debugPrintToken();
+  }
+
+  Future<void> _fetchUserName() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String? userName = prefs.getString('name');
+    setState(() {
+      _userName = userName ?? 'Guest';
+    });
   }
 
   Future<void> _checkLoginStatus() async {
@@ -70,23 +81,20 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  // Fetch categories from API
   Future<void> _fetchCategories() async {
-    final response = await http.get(Uri.parse('https://www.themealdb.com/api/json/v1/1/categories.php'));
+    final response = await http.get(
+        Uri.parse('https://www.themealdb.com/api/json/v1/1/categories.php'));
 
     if (response.statusCode == 200) {
-      // Parse the JSON response
       final data = json.decode(response.body);
       final List<dynamic> categoryList = data['categories'];
 
-      // Update the categories list state
       setState(() {
         categories = categoryList
-            .map<String>((category) => category['strCategory'] as String) // Cast to String
+            .map<String>((category) => category['strCategory'] as String)
             .toList();
       });
     } else {
-      // Handle API error
       print('Failed to load categories');
     }
   }
@@ -98,32 +106,31 @@ class _HomeScreenState extends State<HomeScreen> {
 
     return Scaffold(
       key: _scaffoldKey,
+      backgroundColor: const Color(0xFFE3AFBC),
       appBar: AppBar(
         title: const Text('Recipe Finder'),
         leading: IconButton(
           icon: const Icon(Icons.menu),
           onPressed: () {
-            // Open the drawer
             _scaffoldKey.currentState?.openDrawer();
           },
         ),
+        backgroundColor: const Color.fromARGB(255, 255, 255, 255),
         actions: [
           if (_isLoggedIn)
             IconButton(
-              icon: const Icon(Icons.exit_to_app),
-              onPressed: _logout,
+              icon: const Icon(Icons.search),
+              onPressed: () {
+                Navigator.push(context,
+                    MaterialPageRoute(builder: (_) => const SearchScreen()));
+                debugPrintToken();
+              },
             ),
-          IconButton(
-            icon: const Icon(Icons.search),
-            onPressed: () {
-              Navigator.push(context, MaterialPageRoute(builder: (_) => const SearchScreen()));
-              debugPrintToken();
-            },
-          ),
           IconButton(
             icon: const Icon(Icons.favorite),
             onPressed: () {
-              Navigator.push(context, MaterialPageRoute(builder: (_) => const FavoritesScreen()));
+              Navigator.push(context,
+                  MaterialPageRoute(builder: (_) => const FavoritesScreen()));
             },
           ),
         ],
@@ -132,24 +139,53 @@ class _HomeScreenState extends State<HomeScreen> {
         child: ListView(
           padding: EdgeInsets.zero,
           children: <Widget>[
-            const DrawerHeader(
-              child: Text('Menu'),
+            DrawerHeader(
+              decoration: const BoxDecoration(
+                color: Color(0xFFEE4C74),
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const CircleAvatar(
+                    radius: 30,
+                    backgroundColor: Colors.white,
+                    child: Icon(Icons.person, size: 40, color: Colors.black),
+                  ),
+                  const SizedBox(height: 10),
+                  Text(
+                    'Hello, $_userName',
+                    style: const TextStyle(
+                      color: Colors.white,
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ],
+              ),
             ),
             ListTile(
-              title: const Text('Favorites'),
+              leading: const Icon(Icons.favorite, color: Colors.black),
+              title: const Text('Favorites',
+                  style: TextStyle(color: Colors.black)),
               onTap: () {
-                Navigator.push(context, MaterialPageRoute(builder: (_) => const FavoritesScreen()));
+                Navigator.push(context,
+                    MaterialPageRoute(builder: (_) => const FavoritesScreen()));
               },
             ),
             ListTile(
-              title: const Text('Search'),
+              leading: const Icon(Icons.search, color: Colors.black),
+              title:
+                  const Text('Search', style: TextStyle(color: Colors.black)),
               onTap: () {
-                Navigator.push(context, MaterialPageRoute(builder: (_) => const SearchScreen()));
+                Navigator.push(context,
+                    MaterialPageRoute(builder: (_) => const SearchScreen()));
               },
             ),
             if (_isLoggedIn)
               ListTile(
-                title: const Text('Logout'),
+                leading: const Icon(Icons.exit_to_app, color: Colors.black),
+                title:
+                    const Text('Logout', style: TextStyle(color: Colors.black)),
                 onTap: _logout,
               ),
           ],
@@ -157,12 +193,16 @@ class _HomeScreenState extends State<HomeScreen> {
       ),
       body: Column(
         children: [
-          // Horizontal ListView for categories
           Container(
             height: 50,
             padding: const EdgeInsets.symmetric(vertical: 10),
             child: categories.isEmpty
-                ? const Center(child: CircularProgressIndicator())
+                ? const Center(
+                    child: CircularProgressIndicator(
+                      valueColor: AlwaysStoppedAnimation<Color>(
+                          Color(0xFFEE4C74)), // กำหนดสีที่ต้องการ
+                    ),
+                  )
                 : ListView.builder(
                     scrollDirection: Axis.horizontal,
                     itemCount: categories.length,
@@ -171,36 +211,35 @@ class _HomeScreenState extends State<HomeScreen> {
                         padding: const EdgeInsets.symmetric(horizontal: 8.0),
                         child: GestureDetector(
                           onTap: () {
-                            // Navigate to the Category Meals screen
                             Navigator.push(
                               context,
                               MaterialPageRoute(
                                 builder: (_) => CategoryMealsScreen(
-                                  category: categories[index], // Passing selected category
+                                  category: categories[index],
                                 ),
                               ),
                             );
                           },
                           child: Chip(
                             label: Text(categories[index]),
-                            backgroundColor: Colors.blueAccent,
-                            labelStyle: const TextStyle(color: Colors.white),
+                            backgroundColor: const Color(0xFFEE4C74),
+                            labelStyle: const TextStyle(
+                                color: Colors.white,
+                                fontWeight: FontWeight.bold),
                           ),
                         ),
                       );
                     },
                   ),
           ),
-          const Padding(
-            padding: EdgeInsets.all(10),
-            child: Text(
-              'Random Recipes 🍽',
-              style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
-            ),
-          ),
           Expanded(
             child: apiService.randomMeals.isEmpty
-                ? const Center(child: CircularProgressIndicator())
+                ? const Center(
+                    child: CircularProgressIndicator(
+                      valueColor: AlwaysStoppedAnimation<Color>(
+                          Color(0xFFEE4C74)), // กำหนดสีที่ต้องการ
+                    ),
+                  )
                 : GridView.builder(
                     padding: const EdgeInsets.all(8),
                     gridDelegate:
@@ -232,7 +271,6 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 }
 
-
 void debugPrintToken() async {
   const storage = FlutterSecureStorage();
   String? secureToken = await storage.read(key: 'token');
@@ -242,12 +280,9 @@ void debugPrintToken() async {
   String? sharedToken = prefs.getString('token');
   String? emailToken = prefs.getString('email');
   String? userId = prefs.getString("_id");
-
+  String? name = prefs.getString("name");
   print("SharedPreferences Token: $sharedToken");
   print("SharedPreferences email: $emailToken");
   print("SharedPreferences id: $userId");
-
+  print("SharedPreferences name: $name");
 }
-
-
-

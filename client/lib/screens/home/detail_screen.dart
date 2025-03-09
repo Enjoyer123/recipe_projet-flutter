@@ -24,6 +24,8 @@ class DetailScreen extends StatelessWidget {
     final bool isFavorite = apiService.favorites.contains(meal);
 
     return Scaffold(
+            backgroundColor: const Color(0xFFE3AFBC),
+
       appBar: AppBar(
         title: Text(meal.name),
         actions: [
@@ -35,6 +37,8 @@ class DetailScreen extends StatelessWidget {
             },
           ),
         ],
+        backgroundColor: const Color.fromARGB(255, 255, 255, 255),
+
       ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(16.0),

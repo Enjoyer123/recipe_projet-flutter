@@ -133,7 +133,12 @@ class _LoginScreenState extends State<LoginScreen> {
                   ),
                   const SizedBox(height: 20),
                   isLoading
-                      ? const CircularProgressIndicator()
+                      ? const Center(
+              child: CircularProgressIndicator(
+                valueColor: AlwaysStoppedAnimation<Color>(
+                    Color(0xFFEE4C74)), // กำหนดสีที่ต้องการ
+              ),
+            )
                       : ElevatedButton(
                           onPressed: _login,
                           style: ElevatedButton.styleFrom(
