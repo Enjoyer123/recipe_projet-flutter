@@ -109,8 +109,6 @@ class ApiService extends ChangeNotifier {
     _isFavoriteButtonDisabled = true;
     notifyListeners();
 
-    // ---------------
-
     SharedPreferences prefs = await SharedPreferences.getInstance();
     String? email = prefs.getString("email");
 
@@ -131,7 +129,6 @@ class ApiService extends ChangeNotifier {
     throw Exception('No Id found in session');
   }
 
-    // ---------------
 
     final checkUrl = Uri.parse('http://localhost:5000/favorites/${meal.id}');
     final checkResponse = await http.get(checkUrl);
@@ -182,7 +179,7 @@ class ApiService extends ChangeNotifier {
       // await removeFavorite(meal);
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
-          content: Text('Failed to add to favorites. Please try again later.'),
+          content: Text('Recipe Added.'),
           duration: Duration(seconds: 1),
         ),
       );
@@ -225,13 +222,13 @@ Future<void> addNoteToMeal(String mealId, String note) async {
     throw Exception('No Id found in session');
   }
 
-  final url = Uri.parse('http://localhost:5000/favorites/$mealId/$userId'); // ใช้ทั้ง mealId และ userId
+  final url = Uri.parse('http://localhost:5000/favorites/$mealId/$userId'); 
 
   final body = json.encode({
-    'note': note,  // ส่งโน้ตไปเพิ่มใน array
+    'note': note,  
   });
 
-  // เปลี่ยนจาก PUT เป็น POST
+  
   final response = await http.post(
     url,
     headers: {'Content-Type': 'application/json'},
@@ -255,7 +252,7 @@ Future<void> addNoteToMeal(String mealId, String note) async {
   if (userId == null) {
     throw Exception('No Id found in session');
   }
-  final url = Uri.parse('http://localhost:5000/favorites/$mealId/$userId'); // ใช้ทั้ง mealId และ userId
+  final url = Uri.parse('http://localhost:5000/favorites/$mealId/$userId'); 
   final response = await http.get(url);
  notifyListeners();
   if (response.statusCode == 200) {
@@ -267,7 +264,7 @@ Future<void> addNoteToMeal(String mealId, String note) async {
   }
 }
 
- // Function to delete a note
+ 
 Future<void> deleteNoteFromMeal(String mealId, String userId, int noteIndex) async {
   final response = await http.delete(
     Uri.parse('http://localhost:5000/favorites/$mealId/$userId/note/$noteIndex'),
@@ -281,7 +278,7 @@ Future<void> deleteNoteFromMeal(String mealId, String userId, int noteIndex) asy
   }
 }
 
-// Function to update a note
+
 Future<void> updateNoteForMeal(String mealId, int noteIndex, String newNote) async {
  
   final userId = await getIdFromSession();
@@ -307,12 +304,11 @@ Future<Meal> fetchMealDetails(String idMeal) async {
   if (response.statusCode == 200) {
     final data = json.decode(response.body);
 
-    // ตรวจสอบว่า 'meals' อยู่ใน response และมีข้อมูลหรือไม่
+    
     if (data['meals'] != null && data['meals'].isNotEmpty) {
-      // แปลงข้อมูลจาก API เป็น Meal object
+      
       final mealData = data['meals'][0];
 
-      // ใช้ Meal.fromRecipeDbJson เพื่อแปลงข้อมูล
       final meal = Meal.fromRecipeDbJson(mealData);
 
       return meal;

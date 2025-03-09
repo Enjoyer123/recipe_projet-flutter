@@ -77,40 +77,51 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   ),
                   const SizedBox(height: 20),
                   TextField(
+                    cursorColor: const Color(0xFFEE4C74),
                     controller: nameController,
                     decoration: const InputDecoration(
                       labelText: "Full Name",
+                      labelStyle: TextStyle(color: Color.fromARGB(255, 0, 0, 0)), 
+                      floatingLabelStyle: TextStyle(color: Color(0xFFEE4C74)), 
                       prefixIcon: Icon(Icons.person, color: Colors.pink),
                       filled: true,
                       fillColor: Colors.white,
-                      border: UnderlineInputBorder(
-                        borderSide: BorderSide(color: Colors.grey),
+                       focusedBorder: UnderlineInputBorder(
+                        borderSide: BorderSide(color: Color(0xFFEE4C74)),
+                        
                       ),
                     ),
                   ),
                   const SizedBox(height: 15),
-                  TextField(
+                 TextField(
+                    cursorColor: const Color(0xFFEE4C74),
                     controller: emailController,
                     decoration: const InputDecoration(
                       labelText: "Email",
+                      labelStyle: TextStyle(color: Color.fromARGB(255, 0, 0, 0)), 
+                      floatingLabelStyle: TextStyle(color: Color(0xFFEE4C74)), 
                       prefixIcon: Icon(Icons.email, color: Colors.pink),
                       filled: true,
                       fillColor: Colors.white,
-                      border: UnderlineInputBorder(
-                        borderSide: BorderSide(color: Colors.grey),
+                      focusedBorder: UnderlineInputBorder(
+                        borderSide: BorderSide(color: Color(0xFFEE4C74)),
+                        
                       ),
                     ),
                   ),
                   const SizedBox(height: 15),
                   TextField(
+                    cursorColor: const Color(0xFFEE4C74),
                     controller: passwordController,
                     decoration: const InputDecoration(
                       labelText: "Password",
+                      labelStyle: TextStyle(color: Color.fromARGB(255, 0, 0, 0)), 
+                      floatingLabelStyle: TextStyle(color: Color(0xFFEE4C74)), 
                       prefixIcon: Icon(Icons.lock, color: Colors.pink),
                       filled: true,
                       fillColor: Colors.white,
-                      border: UnderlineInputBorder(
-                        borderSide: BorderSide(color: Colors.grey),
+                      focusedBorder: UnderlineInputBorder(
+                        borderSide: BorderSide(color: Color(0xFFEE4C74)),
                       ),
                     ),
                     obscureText: true,

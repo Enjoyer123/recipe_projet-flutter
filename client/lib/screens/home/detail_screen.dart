@@ -24,21 +24,19 @@ class DetailScreen extends StatelessWidget {
     final bool isFavorite = apiService.favorites.contains(meal);
 
     return Scaffold(
-            backgroundColor: const Color(0xFFE3AFBC),
-
+      backgroundColor: const Color(0xFFE3AFBC),
       appBar: AppBar(
         title: Text(meal.name),
         actions: [
           IconButton(
             icon: Icon(isFavorite ? Icons.favorite : Icons.favorite_border,
-                color: Colors.red),
+                color: Color(0xFFEE4C74)),
             onPressed: () async {
               await apiService.toggleFavorite(meal, context);
             },
           ),
         ],
         backgroundColor: const Color.fromARGB(255, 255, 255, 255),
-
       ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(16.0),
@@ -51,11 +49,12 @@ class DetailScreen extends StatelessWidget {
                   borderRadius: BorderRadius.circular(10)),
               child: Image.network(meal.image),
             ),
-            const SizedBox(height: 16),
+            const SizedBox(height: 8),
             if (meal.videoUrl.isNotEmpty)
               GestureDetector(
                 onTap: () => _launchURL(meal.videoUrl),
                 child: Card(
+                  color: Colors.white,
                   elevation: 4,
                   shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(10)),
@@ -63,7 +62,7 @@ class DetailScreen extends StatelessWidget {
                     padding: EdgeInsets.all(16.0),
                     child: Row(
                       children: [
-                        Icon(Icons.play_arrow, color: Colors.red),
+                        Icon(Icons.play_arrow, color: Color(0xFFEE4C74)),
                         SizedBox(width: 8),
                         Text('Watch the video on YouTube',
                             style: TextStyle(fontSize: 16)),
@@ -72,67 +71,86 @@ class DetailScreen extends StatelessWidget {
                   ),
                 ),
               ),
-            const SizedBox(height: 16),
-            Card(
-              elevation: 4,
-              shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(10)),
-              child: Padding(
-                padding: const EdgeInsets.all(16.0),
-                child: Text(
-                  "สัญชาติ: ${meal.area}",
-                  style: const TextStyle(
-                      fontSize: 18, fontWeight: FontWeight.bold),
+            const SizedBox(height: 8),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                SizedBox(
+                  width: (MediaQuery.of(context).size.width - 32) / 2,
+                  child: Card(
+                    color: Colors.white,
+                    elevation: 4,
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10)),
+                    child: Padding(
+                      padding: const EdgeInsets.all(16.0),
+                      child: Center(
+                        child: Text(
+                          meal.area,
+                          style: const TextStyle(
+                              fontSize: 18, fontWeight: FontWeight.bold),
+                        ),
+                      ),
+                    ),
+                  ),
                 ),
-              ),
-            ),
-            const SizedBox(height: 16),
-            Card(
-              elevation: 4,
-              shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(10)),
-              child: Padding(
-                padding: const EdgeInsets.all(16.0),
-                child: Text(
-                  "ประเภท: ${meal.category}",
-                  style: const TextStyle(
-                      fontSize: 18, fontWeight: FontWeight.bold),
+                SizedBox(
+                  width: (MediaQuery.of(context).size.width - 32) / 2,
+                  child: Card(
+                    color: Colors.white,
+                    elevation: 4,
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10)),
+                    child: Padding(
+                      padding: const EdgeInsets.all(16.0),
+                      child: Center(
+                        child: Text(
+                          meal.category,
+                          style: const TextStyle(
+                              fontSize: 18, fontWeight: FontWeight.bold),
+                        ),
+                      ),
+                    ),
+                  ),
                 ),
-              ),
+              ],
             ),
-            const SizedBox(height: 16),
+            const SizedBox(height: 8),
             Card(
-              elevation: 4,
+              color: Colors.white,
               shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(10)),
-              child: Padding(
+                borderRadius: BorderRadius.circular(10),
+              ),
+              child: Container(
+                width: double.infinity,
                 padding: const EdgeInsets.all(16.0),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    const Text("ส่วนประกอบ:",
+                    const Text("Ingredient",
                         style: TextStyle(
                             fontSize: 18, fontWeight: FontWeight.bold)),
                     const SizedBox(height: 8),
-                    ...meal.ingredients
-                        .map((ingredient) => Text("• $ingredient",
-                            style: const TextStyle(fontSize: 16)))
-                        .toList(),
+                    ...meal.ingredients.map((ingredient) => Text(
+                        "• $ingredient",
+                        style: const TextStyle(fontSize: 16)))
                   ],
                 ),
               ),
             ),
-            const SizedBox(height: 16),
+            const SizedBox(height: 8),
             Card(
+              color: Colors.white,
               elevation: 4,
               shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(10)),
-              child: Padding(
+              child: Container(
+                width: double.infinity,
                 padding: const EdgeInsets.all(16.0),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    const Text("วิธีทำ:",
+                    const Text("How to cook",
                         style: TextStyle(
                             fontSize: 18, fontWeight: FontWeight.bold)),
                     const SizedBox(height: 8),

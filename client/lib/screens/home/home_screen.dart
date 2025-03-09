@@ -55,10 +55,15 @@ class _HomeScreenState extends State<HomeScreen> {
       setState(() {
         _isLoggedIn = true;
       });
+      
     } else {
       setState(() {
         _isLoggedIn = false;
       });
+      Navigator.pushReplacement(
+      context,
+      MaterialPageRoute(builder: (_) => const LoginScreen()),
+    );
     }
   }
 
@@ -102,30 +107,30 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     final apiService = Provider.of<ApiService>(context);
-    final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
+    final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
 
     return Scaffold(
-      key: _scaffoldKey,
+      key: scaffoldKey,
       backgroundColor: const Color(0xFFE3AFBC),
       appBar: AppBar(
         title: const Text('Recipe Finder'),
         leading: IconButton(
           icon: const Icon(Icons.menu),
           onPressed: () {
-            _scaffoldKey.currentState?.openDrawer();
+            scaffoldKey.currentState?.openDrawer();
           },
         ),
         backgroundColor: const Color.fromARGB(255, 255, 255, 255),
         actions: [
-          if (_isLoggedIn)
-            IconButton(
-              icon: const Icon(Icons.search),
-              onPressed: () {
-                Navigator.push(context,
-                    MaterialPageRoute(builder: (_) => const SearchScreen()));
-                debugPrintToken();
-              },
-            ),
+          
+          IconButton(
+            icon: const Icon(Icons.search),
+            onPressed: () {
+              Navigator.push(context,
+                  MaterialPageRoute(builder: (_) => const SearchScreen()));
+              debugPrintToken();
+            },
+          ),
           IconButton(
             icon: const Icon(Icons.favorite),
             onPressed: () {
@@ -181,7 +186,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     MaterialPageRoute(builder: (_) => const SearchScreen()));
               },
             ),
-            if (_isLoggedIn)
+            
               ListTile(
                 leading: const Icon(Icons.exit_to_app, color: Colors.black),
                 title:
@@ -200,7 +205,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 ? const Center(
                     child: CircularProgressIndicator(
                       valueColor: AlwaysStoppedAnimation<Color>(
-                          Color(0xFFEE4C74)), // กำหนดสีที่ต้องการ
+                          Color(0xFFEE4C74)), 
                     ),
                   )
                 : ListView.builder(
@@ -237,7 +242,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 ? const Center(
                     child: CircularProgressIndicator(
                       valueColor: AlwaysStoppedAnimation<Color>(
-                          Color(0xFFEE4C74)), // กำหนดสีที่ต้องการ
+                          Color(0xFFEE4C74)),
                     ),
                   )
                 : GridView.builder(

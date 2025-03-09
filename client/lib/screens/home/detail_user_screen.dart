@@ -69,207 +69,156 @@ class _DetailScreenState extends State<DetailScreen> {
   }
 
   void _addNote(ApiService apiService) {
-    _showAddNoteDialog(
-      apiService,
+    _showAddNoteDialog(apiService);
+  }
+
+  void _showAddNoteDialog(ApiService apiService) {
+    showModalBottomSheet(
+      context: context,
+      backgroundColor: Colors.white,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+      ),
+      builder: (BuildContext context) {
+        return Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const Text(
+                'Add Note',
+                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+              ),
+              const SizedBox(height: 10),
+              TextField(
+                cursorColor: const Color(0xFFEE4C74),
+                controller: OGnoteController,
+                decoration: const InputDecoration(
+                  focusedBorder: UnderlineInputBorder(
+                    borderSide: BorderSide(
+                      color: Color(
+                          0xFFEE4C74),
+                      width: 2.0, 
+                    ),
+                  ),
+                ),
+                maxLines: 3,
+              ),
+              const SizedBox(height: 20),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  ElevatedButton.icon(
+                    onPressed: () => Navigator.pop(context),
+                    icon: const Icon(Icons.cancel, color: Color(0xFFEE4C74)),
+                    label: const Text('Cancel'),
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.white,
+                      foregroundColor: const Color(0xFFEE4C74),
+                    ),
+                  ),
+                  ElevatedButton.icon(
+                    onPressed: () async {
+                      String newNote = OGnoteController.text.trim();
+                      if (newNote.isNotEmpty) {
+                        await apiService.addNoteToMeal(widget.meal.id, newNote);
+                        OGnoteController.clear();
+                        fetchNotesFromServer(widget.meal.id);
+                      }
+                      // ignore: use_build_context_synchronously
+                      Navigator.pop(context);
+                    },
+                    icon: const Icon(Icons.add, color: Colors.green),
+                    label: const Text(
+                      'Add',
+                      style: TextStyle(
+                          color: Colors.green),
+                    ),
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.white,
+                    ),
+                  ),
+                ],
+              ),
+            ],
+          ),
+        );
+      },
     );
   }
 
-  // void _showEditNoteDialog(int editingNoteIndex) {
-  //   showDialog(
-  //     context: context,
-  //     builder: (BuildContext context) {
-  //       return AlertDialog(
-  //         title: const Text('Edit Note'),
-  //         content: TextField(
-  //           controller: noteController,
-  //           decoration: const InputDecoration(labelText: 'Edit your note'),
-  //           maxLines: 3,
-  //         ),
-  //         actions: [
-  //           TextButton(
-  //             onPressed: () {
-  //               Navigator.pop(context);
-  //             },
-  //             child: const Text('Cancel'),
-  //           ),
-  //           TextButton(
-  //             onPressed: () async {
-  //               String updatedNote = noteController.text.trim();
-  //               if (updatedNote.isNotEmpty) {
-  //                 await _updateNote(updatedNote, editingNoteIndex);
-  //               }
-  //               // ignore: use_build_context_synchronously
-  //               Navigator.pop(context);
-  //             },
-  //             child: const Text('Save'),
-  //           ),
-  //         ],
-  //       );
-  //     },
-  //   );
-  // }
-
-  // void _showAddNoteDialog(apiService) {
-  //   showDialog(
-  //     context: context,
-  //     builder: (BuildContext context) {
-  //       return AlertDialog(
-  //         title: const Text('Add Note'),
-  //         content: TextField(
-  //           controller: OGnoteController,
-  //           decoration: const InputDecoration(labelText: 'Add your note'),
-  //           maxLines: 3,
-  //         ),
-  //         actions: [
-  //           TextButton(
-  //             onPressed: () {
-  //               Navigator.pop(context);
-  //             },
-  //             child: const Text('Cancel'),
-  //           ),
-  //           TextButton(
-  //             onPressed: () async {
-  //               String newNote = OGnoteController.text.trim();
-  //               if (newNote.isNotEmpty) {
-  //                 await apiService.addNoteToMeal(widget.meal.id, newNote);
-  //                 OGnoteController.clear();
-  //                 fetchNotesFromServer(widget.meal.id);
-  //               }
-  //               Navigator.pop(context);
-  //             },
-  //             child: const Text('Add'),
-  //           ),
-  //         ],
-  //       );
-  //     },
-  //   );
-  // }
-
-  void _showAddNoteDialog(ApiService apiService) {
-  showModalBottomSheet(
-    context: context,
-    shape: const RoundedRectangleBorder(
-      borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
-    ),
-    builder: (BuildContext context) {
-      return Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const Text(
-              'Add Note',
-              style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-            ),
-            const SizedBox(height: 10),
-            TextField(
-              controller: OGnoteController,
-              decoration: const InputDecoration(
-                labelText: 'Add your note',
-                border: OutlineInputBorder(),
+  void _showEditNoteDialog(int editingNoteIndex) {
+    showModalBottomSheet(
+      context: context,
+      backgroundColor: Colors.white,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+      ),
+      builder: (BuildContext context) {
+        return Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const Text(
+                'Edit Note',
+                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
               ),
-              maxLines: 3,
-            ),
-            const SizedBox(height: 20),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                ElevatedButton.icon(
-                  onPressed: () => Navigator.pop(context),
-                  icon: const Icon(Icons.cancel, color: Colors.red),
-                  label: const Text('Cancel'),
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.white,
-                    foregroundColor: Colors.red,
+              const SizedBox(height: 10),
+              TextField(
+                controller: noteController,
+                decoration: const InputDecoration(
+                  focusedBorder: UnderlineInputBorder(
+                    borderSide: BorderSide(
+                      color: Color(
+                          0xFFEE4C74), 
+                      width: 2.0, 
+                    ),
                   ),
                 ),
-                ElevatedButton.icon(
-                  onPressed: () async {
-                    String newNote = OGnoteController.text.trim();
-                    if (newNote.isNotEmpty) {
-                      await apiService.addNoteToMeal(widget.meal.id, newNote);
-                      OGnoteController.clear();
-                      fetchNotesFromServer(widget.meal.id);
-                    }
-                    Navigator.pop(context);
-                  },
-                  icon: const Icon(Icons.add, color: Colors.white),
-                  label: const Text('Add'),
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.green,
-                  ),
-                ),
-              ],
-            ),
-          ],
-        ),
-      );
-    },
-  );
-}
-
-void _showEditNoteDialog(int editingNoteIndex) {
-  showModalBottomSheet(
-    context: context,
-    shape: const RoundedRectangleBorder(
-      borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
-    ),
-    builder: (BuildContext context) {
-      return Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const Text(
-              'Edit Note',
-              style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-            ),
-            const SizedBox(height: 10),
-            TextField(
-              controller: noteController,
-              decoration: const InputDecoration(
-                labelText: 'Edit your note',
-                border: OutlineInputBorder(),
+                maxLines: 3,
               ),
-              maxLines: 3,
-            ),
-            const SizedBox(height: 20),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                ElevatedButton.icon(
-                  onPressed: () => Navigator.pop(context),
-                  icon: const Icon(Icons.cancel, color: Colors.red),
-                  label: const Text('Cancel'),
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.white,
-                    foregroundColor: Colors.red,
+              const SizedBox(height: 20),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  ElevatedButton.icon(
+                    onPressed: () => Navigator.pop(context),
+                    icon: const Icon(Icons.cancel, color: Color(0xFFEE4C74)),
+                    label: const Text('Cancel'),
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.white,
+                      foregroundColor: const Color(0xFFEE4C74),
+                    ),
                   ),
-                ),
-                ElevatedButton.icon(
-                  onPressed: () async {
-                    String updatedNote = noteController.text.trim();
-                    if (updatedNote.isNotEmpty) {
-                      await _updateNote(updatedNote, editingNoteIndex);
-                    }
-                    Navigator.pop(context);
-                  },
-                  icon: const Icon(Icons.save, color: Colors.white),
-                  label: const Text('Save'),
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.blue,
+                  ElevatedButton.icon(
+                    onPressed: () async {
+                      String updatedNote = noteController.text.trim();
+                      if (updatedNote.isNotEmpty) {
+                        await _updateNote(updatedNote, editingNoteIndex);
+                      }
+                      // ignore: use_build_context_synchronously
+                      Navigator.pop(context);
+                    },
+                    icon: const Icon(Icons.save, color: Colors.green),
+                    label: const Text(
+                      'Save',
+                      style: TextStyle(color: Colors.green),
+                    ),
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.white,
+                    ),
                   ),
-                ),
-              ],
-            ),
-          ],
-        ),
-      );
-    },
-  );
-}
+                ],
+              ),
+            ],
+          ),
+        );
+      },
+    );
+  }
 
   Future<void> _updateNote(String updatedNote, int editingNoteIndex) async {
     final prefs = await SharedPreferences.getInstance();
@@ -335,20 +284,18 @@ void _showEditNoteDialog(int editingNoteIndex) {
 
     return Scaffold(
       backgroundColor: const Color(0xFFE3AFBC),
-       
       appBar: AppBar(
         title: Text(widget.meal.name),
         actions: [
           IconButton(
             icon: Icon(isFavorite ? Icons.favorite : Icons.favorite_border,
-                color: Colors.red),
+                color: const Color(0xFFEE4C74)),
             onPressed: () async {
               await apiService.toggleFavorite(widget.meal, context);
             },
           ),
         ],
-                backgroundColor: const Color.fromARGB(255, 255, 255, 255),
-
+        backgroundColor: const Color.fromARGB(255, 255, 255, 255),
       ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(16.0),
@@ -356,16 +303,18 @@ void _showEditNoteDialog(int editingNoteIndex) {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Card(
+              color: Colors.white,
               elevation: 4,
               shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(10)),
               child: Image.network(widget.meal.image),
             ),
-            const SizedBox(height: 16),
+            const SizedBox(height: 8),
             if (widget.meal.videoUrl.isNotEmpty)
               GestureDetector(
                 onTap: () => _launchURL(widget.meal.videoUrl),
                 child: Card(
+                  color: Colors.white,
                   elevation: 4,
                   shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(10)),
@@ -373,7 +322,7 @@ void _showEditNoteDialog(int editingNoteIndex) {
                     padding: EdgeInsets.all(16.0),
                     child: Row(
                       children: [
-                        Icon(Icons.play_arrow, color: Colors.red),
+                        Icon(Icons.play_arrow, color: Color(0xFFEE4C74)),
                         SizedBox(width: 8),
                         Text('Watch the video on YouTube',
                             style: TextStyle(fontSize: 16)),
@@ -382,67 +331,88 @@ void _showEditNoteDialog(int editingNoteIndex) {
                   ),
                 ),
               ),
-            const SizedBox(height: 16),
-            Card(
-              elevation: 4,
-              shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(10)),
-              child: Padding(
-                padding: const EdgeInsets.all(16.0),
-                child: Text(
-                  "สัญชาติ: ${widget.meal.area}",
-                  style: const TextStyle(
-                      fontSize: 18, fontWeight: FontWeight.bold),
+            const SizedBox(height: 8),
+            Row(
+              mainAxisAlignment:
+                  MainAxisAlignment.spaceBetween, 
+              children: [
+                SizedBox(
+                  width: (MediaQuery.of(context).size.width - 32) / 2,
+                  child: Card(
+                    color: Colors.white,
+                    elevation: 4,
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10)),
+                    child: Padding(
+                      padding: const EdgeInsets.all(16.0),
+                      child: Center(
+                        child: Text(
+                          widget.meal.area,
+                          style: const TextStyle(
+                              fontSize: 18, fontWeight: FontWeight.bold),
+                        ),
+                      ),
+                    ),
+                  ),
                 ),
-              ),
-            ),
-            const SizedBox(height: 16),
-            Card(
-              elevation: 4,
-              shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(10)),
-              child: Padding(
-                padding: const EdgeInsets.all(16.0),
-                child: Text(
-                  "ประเภท: ${widget.meal.category}",
-                  style: const TextStyle(
-                      fontSize: 18, fontWeight: FontWeight.bold),
+                SizedBox(
+                  width: (MediaQuery.of(context).size.width - 32) / 2, 
+                  child: Card(
+                    color: Colors.white,
+                    elevation: 4,
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10)),
+                    child: Padding(
+                      padding: const EdgeInsets.all(16.0),
+                      child: Center(
+                        child: Text(
+                          widget.meal.category,
+                          style: const TextStyle(
+                              fontSize: 18, fontWeight: FontWeight.bold),
+                        ),
+                      ),
+                    ),
+                  ),
                 ),
-              ),
+              ],
             ),
-            const SizedBox(height: 16),
+            const SizedBox(height: 8),
             Card(
-              elevation: 4,
+              color: Colors.white,
               shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(10)),
-              child: Padding(
+                borderRadius: BorderRadius.circular(10),
+              ),
+              child: Container(
+                width: double.infinity, 
                 padding: const EdgeInsets.all(16.0),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    const Text("ส่วนประกอบ:",
+                    const Text("Ingredient",
                         style: TextStyle(
                             fontSize: 18, fontWeight: FontWeight.bold)),
                     const SizedBox(height: 8),
-                    ...widget.meal.ingredients
-                        .map((ingredient) => Text("• $ingredient",
-                            style: const TextStyle(fontSize: 16)))
-                        .toList(),
+                    ...widget.meal.ingredients.map((ingredient) => Text(
+                        "• $ingredient",
+                        style: const TextStyle(fontSize: 16)))
                   ],
                 ),
               ),
             ),
-            const SizedBox(height: 16),
+            const SizedBox(height: 8),
             Card(
+              color: Colors.white,
               elevation: 4,
               shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(10)),
-              child: Padding(
+              child: Container(
+                width: double.infinity, 
+
                 padding: const EdgeInsets.all(16.0),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    const Text("วิธีทำ:",
+                    const Text("How to cook",
                         style: TextStyle(
                             fontSize: 18, fontWeight: FontWeight.bold)),
                     const SizedBox(height: 8),
@@ -452,89 +422,78 @@ void _showEditNoteDialog(int editingNoteIndex) {
                 ),
               ),
             ),
-            const SizedBox(height: 16),
-Card(
-  elevation: 4,
-  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-  child: Padding(
-    padding: const EdgeInsets.all(16.0),
-    child: Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        const Text("หมายเหตุ:",
-            style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
-        const SizedBox(height: 8),
-        _notes.isEmpty
-            ? const Text("ไม่มีหมายเหตุ", style: TextStyle(fontSize: 16))
-            : Column(
-                children: _notes.asMap().entries.map((entry) {
-                  int index = entry.key;
-                  String note = entry.value;
-                  return ListTile(
-                    leading: const Icon(Icons.note, color: Colors.blue),
-                    title: Text(note, style: const TextStyle(fontSize: 16)),
-                    trailing: Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        IconButton(
-                          icon: const Icon(Icons.edit, color: Colors.orange),
-                          onPressed: () => _editNote(index),
-                        ),
-                        IconButton(
-                          icon: const Icon(Icons.delete, color: Colors.red),
-                          onPressed: () => _deleteNote(index, widget.meal.id),
-                        ),
-                      ],
-                    ),
-                  );
-                }).toList(),
-              ),
-      ],
-    ),
-  ),
-),
+            const SizedBox(height: 8),
+            Card(
+              color: Colors.white,
+              elevation: 4,
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(10)),
+              child: Container(
+                width: double.infinity,
 
-            // const SizedBox(height: 16),
-            // const Text("หมายเหตุ:",
-            //     style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
-            // const SizedBox(height: 8),
-            // _notes.isEmpty
-            //     ? const ListTile(
-            //         title: Text("ยังไม่มีโน้ต"),
-            //         leading: Icon(Icons.info, color: Colors.grey),
-            //       )
-            //     : ListView.builder(
-            //         shrinkWrap: true,
-            //         itemCount: _notes.length,
-            //         itemBuilder: (context, index) {
-            //           return ListTile(
-            //             title: Text(_notes[index]),
-            //             leading:
-            //                 const Icon(Icons.check_circle, color: Colors.green),
-            //             trailing: Row(
-            //               mainAxisSize: MainAxisSize.min,
-            //               children: [
-            //                 IconButton(
-            //                   icon: Icon(Icons.edit),
-            //                   onPressed: () => _editNote(index),
-            //                 ),
-            //                 IconButton(
-            //                   icon: Icon(Icons.delete, color: Colors.red),
-            //                   onPressed: () =>
-            //                       _deleteNote(index, widget.meal.id),
-            //                 ),
-            //               ],
-            //             ),
-            //           );
-            //         },
-            //       ),
-            const SizedBox(height: 16),
-            ElevatedButton(
-              onPressed: () {
-                _addNote(apiService);
-              },
-              child: const Text("เพิ่มโน้ต"),
+                padding: const EdgeInsets.all(16.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const Text("Note",
+                        style: TextStyle(
+                            fontSize: 18, fontWeight: FontWeight.bold)),
+                    const SizedBox(height: 8),
+                    _notes.isEmpty
+                        ? const Text("Don't have note",
+                            style: TextStyle(fontSize: 16))
+                        : Column(
+                            children: _notes.asMap().entries.map((entry) {
+                              int index = entry.key;
+                              String note = entry.value;
+                              return ListTile(
+                                title: Text(note,
+                                    style: const TextStyle(fontSize: 16)),
+                                trailing: Row(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    IconButton(
+                                      icon: const Icon(Icons.edit,
+                                          color: Colors.blue),
+                                      onPressed: () => _editNote(index),
+                                    ),
+                                    IconButton(
+                                      icon: const Icon(Icons.delete,
+                                          color: Color(0xFFEE4C74)),
+                                      onPressed: () =>
+                                          _deleteNote(index, widget.meal.id),
+                                    ),
+                                  ],
+                                ),
+                              );
+                            }).toList(),
+                          ),
+                  ],
+                ),
+              ),
             ),
+            IconButton(
+              onPressed: () => _addNote(apiService),
+              icon: Container(
+                padding: const EdgeInsets.all(8.0), 
+                decoration: const BoxDecoration(
+                  shape: BoxShape.circle, 
+                  color:
+                      Color.fromARGB(255, 250, 250, 250), 
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black12, 
+                      blurRadius: 7, 
+                      offset: Offset(0, 10), 
+                    ),
+                  ],
+                ),
+                child: const Icon(
+                  Icons.add,
+                  color: Color.fromARGB(255, 2, 2, 2), 
+                ),
+              ),
+            )
           ],
         ),
       ),

@@ -19,7 +19,7 @@ class RecipeFinderApp extends StatelessWidget {
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
         title: 'Recipe Finder',
-        theme: ThemeData(primarySwatch: Colors.orange),
+        theme: ThemeData(primarySwatch: Colors.pink),
         // home: const HomeScreen(),
         home: const LoginScreen(),
       ),
