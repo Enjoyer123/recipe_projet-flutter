@@ -97,9 +97,8 @@ class _DetailScreenState extends State<DetailScreen> {
                 decoration: const InputDecoration(
                   focusedBorder: UnderlineInputBorder(
                     borderSide: BorderSide(
-                      color: Color(
-                          0xFFEE4C74),
-                      width: 2.0, 
+                      color: Color(0xFFEE4C74),
+                      width: 2.0,
                     ),
                   ),
                 ),
@@ -132,8 +131,7 @@ class _DetailScreenState extends State<DetailScreen> {
                     icon: const Icon(Icons.add, color: Colors.green),
                     label: const Text(
                       'Add',
-                      style: TextStyle(
-                          color: Colors.green),
+                      style: TextStyle(color: Colors.green),
                     ),
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Colors.white,
@@ -172,9 +170,8 @@ class _DetailScreenState extends State<DetailScreen> {
                 decoration: const InputDecoration(
                   focusedBorder: UnderlineInputBorder(
                     borderSide: BorderSide(
-                      color: Color(
-                          0xFFEE4C74), 
-                      width: 2.0, 
+                      color: Color(0xFFEE4C74),
+                      width: 2.0,
                     ),
                   ),
                 ),
@@ -271,6 +268,35 @@ class _DetailScreenState extends State<DetailScreen> {
     }
   }
 
+  void _confirmDelete(int index, String meal) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          backgroundColor: Colors.white,
+          title: const Text("Confirm Delete"),
+          content: const Text("Are you sure you want to delete this note?"),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(context),
+              child: const Text("Cancel",style: TextStyle(color: Color.fromARGB(255, 0, 0, 0))),
+            ),
+            TextButton(
+              onPressed: () async {
+                Navigator.pop(context);
+                await _deleteNote(index, meal);
+              },
+              child: const Text(
+                "Delete",
+               style: TextStyle(color: Color(0xFFEE4C74)),
+              ),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
   @override
   void initState() {
     super.initState();
@@ -333,8 +359,7 @@ class _DetailScreenState extends State<DetailScreen> {
               ),
             const SizedBox(height: 8),
             Row(
-              mainAxisAlignment:
-                  MainAxisAlignment.spaceBetween, 
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 SizedBox(
                   width: (MediaQuery.of(context).size.width - 32) / 2,
@@ -356,7 +381,7 @@ class _DetailScreenState extends State<DetailScreen> {
                   ),
                 ),
                 SizedBox(
-                  width: (MediaQuery.of(context).size.width - 32) / 2, 
+                  width: (MediaQuery.of(context).size.width - 32) / 2,
                   child: Card(
                     color: Colors.white,
                     elevation: 4,
@@ -383,7 +408,7 @@ class _DetailScreenState extends State<DetailScreen> {
                 borderRadius: BorderRadius.circular(10),
               ),
               child: Container(
-                width: double.infinity, 
+                width: double.infinity,
                 padding: const EdgeInsets.all(16.0),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -406,8 +431,7 @@ class _DetailScreenState extends State<DetailScreen> {
               shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(10)),
               child: Container(
-                width: double.infinity, 
-
+                width: double.infinity,
                 padding: const EdgeInsets.all(16.0),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -430,7 +454,6 @@ class _DetailScreenState extends State<DetailScreen> {
                   borderRadius: BorderRadius.circular(10)),
               child: Container(
                 width: double.infinity,
-
                 padding: const EdgeInsets.all(16.0),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -457,12 +480,18 @@ class _DetailScreenState extends State<DetailScreen> {
                                           color: Colors.blue),
                                       onPressed: () => _editNote(index),
                                     ),
+                                    // IconButton(
+                                    //   icon: const Icon(Icons.delete,
+                                    //       color: Color(0xFFEE4C74)),
+                                    //   onPressed: () =>
+                                    //       _deleteNote(index, widget.meal.id),
+                                    // ),
                                     IconButton(
                                       icon: const Icon(Icons.delete,
-                                          color: Color(0xFFEE4C74)),
+                                          color: Colors.red),
                                       onPressed: () =>
-                                          _deleteNote(index, widget.meal.id),
-                                    ),
+                                          _confirmDelete(index, widget.meal.id),
+                                    )
                                   ],
                                 ),
                               );
@@ -475,22 +504,21 @@ class _DetailScreenState extends State<DetailScreen> {
             IconButton(
               onPressed: () => _addNote(apiService),
               icon: Container(
-                padding: const EdgeInsets.all(8.0), 
+                padding: const EdgeInsets.all(8.0),
                 decoration: const BoxDecoration(
-                  shape: BoxShape.circle, 
-                  color:
-                      Color.fromARGB(255, 250, 250, 250), 
+                  shape: BoxShape.circle,
+                  color: Color.fromARGB(255, 250, 250, 250),
                   boxShadow: [
                     BoxShadow(
-                      color: Colors.black12, 
-                      blurRadius: 7, 
-                      offset: Offset(0, 10), 
+                      color: Colors.black12,
+                      blurRadius: 7,
+                      offset: Offset(0, 10),
                     ),
                   ],
                 ),
                 child: const Icon(
                   Icons.add,
-                  color: Color.fromARGB(255, 2, 2, 2), 
+                  color: Color.fromARGB(255, 2, 2, 2),
                 ),
               ),
             )

@@ -16,12 +16,12 @@ class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
 
   @override
+  // ignore: library_private_types_in_public_api
   _HomeScreenState createState() => _HomeScreenState();
 }
 
 class _HomeScreenState extends State<HomeScreen> {
   bool _isLoggedIn = false;
-
   List<String> categories = [];
   String _userName = '';
   @override
@@ -55,15 +55,10 @@ class _HomeScreenState extends State<HomeScreen> {
       setState(() {
         _isLoggedIn = true;
       });
-      
     } else {
       setState(() {
         _isLoggedIn = false;
       });
-      Navigator.pushReplacement(
-      context,
-      MaterialPageRoute(builder: (_) => const LoginScreen()),
-    );
     }
   }
 
@@ -75,14 +70,14 @@ class _HomeScreenState extends State<HomeScreen> {
     await prefs.remove('token');
     await prefs.remove('email');
     await prefs.remove('id');
+    await prefs.remove('name');
 
-    setState(() {
-      _isLoggedIn = false;
-    });
+    setState(() {});
 
     Navigator.pushReplacement(
+      // ignore: use_build_context_synchronously
       context,
-      MaterialPageRoute(builder: (_) => const LoginScreen()),
+      MaterialPageRoute(builder: (_) => const HomeScreen()),
     );
   }
 
@@ -122,7 +117,6 @@ class _HomeScreenState extends State<HomeScreen> {
         ),
         backgroundColor: const Color.fromARGB(255, 255, 255, 255),
         actions: [
-          
           IconButton(
             icon: const Icon(Icons.search),
             onPressed: () {
@@ -186,13 +180,32 @@ class _HomeScreenState extends State<HomeScreen> {
                     MaterialPageRoute(builder: (_) => const SearchScreen()));
               },
             ),
-            
-              ListTile(
-                leading: const Icon(Icons.exit_to_app, color: Colors.black),
-                title:
-                    const Text('Logout', style: TextStyle(color: Colors.black)),
-                onTap: _logout,
+            // ListTile(
+            //   leading: const Icon(Icons.exit_to_app, color: Colors.black),
+            //   title:
+            //       const Text('Logout', style: TextStyle(color: Colors.black)),
+            //   onTap: _logout,
+            // ),
+            ListTile(
+              leading: Icon(
+                _isLoggedIn ? Icons.exit_to_app : Icons.login,
+                color: Colors.black,
               ),
+              title: Text(
+                _isLoggedIn ? 'Logout' : 'Login',
+                style: const TextStyle(color: Colors.black),
+              ),
+              onTap: () {
+                if (_isLoggedIn) {
+                  _logout();
+                } else {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (_) => const LoginScreen()),
+                  );
+                }
+              },
+            ),
           ],
         ),
       ),
@@ -204,8 +217,8 @@ class _HomeScreenState extends State<HomeScreen> {
             child: categories.isEmpty
                 ? const Center(
                     child: CircularProgressIndicator(
-                      valueColor: AlwaysStoppedAnimation<Color>(
-                          Color(0xFFEE4C74)), 
+                      valueColor:
+                          AlwaysStoppedAnimation<Color>(Color(0xFFEE4C74)),
                     ),
                   )
                 : ListView.builder(
@@ -241,8 +254,8 @@ class _HomeScreenState extends State<HomeScreen> {
             child: apiService.randomMeals.isEmpty
                 ? const Center(
                     child: CircularProgressIndicator(
-                      valueColor: AlwaysStoppedAnimation<Color>(
-                          Color(0xFFEE4C74)),
+                      valueColor:
+                          AlwaysStoppedAnimation<Color>(Color(0xFFEE4C74)),
                     ),
                   )
                 : GridView.builder(
