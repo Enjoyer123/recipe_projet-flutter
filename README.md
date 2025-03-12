@@ -56,7 +56,7 @@ Recipe Finder App เป็นแอปพลิเคชัน **Flutter** ท�
 ### 🖥️ ฝั่ง Backend (Node.js + Express + MongoDB)
 ```sh
 # โคลนโปรเจกต์
-git clone https://github.com/enjoyer123/recipe_project-flutter.git
+git clone https://github.com/Enjoyer123/recipe_project-flutter.git
 cd recipe_project-flutter/server
 
 # ติดตั้งแพ็กเกจ
