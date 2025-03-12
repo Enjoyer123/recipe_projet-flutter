@@ -40,7 +40,7 @@ Recipe Finder App เป็นแอปพลิเคชัน **Flutter** ท�
 | ![Home](recipe-img/home.PNG) | ![Detail](recipe-img/detail.PNG) | ![Favorites](recipe-img/fav.PNG) |
 
 
-## 🧵 การแก้ไข
+## 🧵 การแก้ไข หลังจาก present
 |  | การลบหน้าชื่นชอบ| การลบโน๊ต |
 |-----------|----------------|----------|
 | ![Home](recipe-img/out-add.PNG) | ![Detail](recipe-img/fav-pop.PNG) | ![Favorites](recipe-img/note-pop.PNG) |
