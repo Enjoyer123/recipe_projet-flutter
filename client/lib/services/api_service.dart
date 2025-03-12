@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import '../models/meal.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 class ApiService extends ChangeNotifier {
   List<Meal> meals = [];
@@ -10,6 +11,7 @@ class ApiService extends ChangeNotifier {
   List<String> _notes = [];
 
   List<String> get notes => _notes;
+  static final String baseUrl = dotenv.env['BASE_URL'] ?? "http://localhost:5000";
 
   List<Meal> _favorites = [];
   bool _isFavoriteButtonDisabled = false;
@@ -70,7 +72,7 @@ class ApiService extends ChangeNotifier {
       throw Exception('No email found in session');
     }
 
-    final url = Uri.parse('http://localhost:5000/favorites?email=$userEmail');
+    final url = Uri.parse('$baseUrl/favorites?email=$userEmail');
     // final response = await http.get(url);
     final response = await http.get(
       url,
@@ -92,7 +94,7 @@ class ApiService extends ChangeNotifier {
   }
 
   Future<bool> isFavoriteAlreadyInDb(String recipeId) async {
-    final url = Uri.parse('http://localhost:5000/favorites/$recipeId');
+    final url = Uri.parse('$baseUrl/favorites/$recipeId');
     final response = await http.get(url);
 
     if (response.statusCode == 200) {
@@ -130,14 +132,14 @@ class ApiService extends ChangeNotifier {
   }
 
 
-    final checkUrl = Uri.parse('http://localhost:5000/favorites/${meal.id}');
+    final checkUrl = Uri.parse('$baseUrl/favorites/${meal.id}');
     final checkResponse = await http.get(checkUrl);
 
     if (checkResponse.statusCode == 200) {
       _isFavoriteButtonDisabled = false;
     }
    
-    final url = Uri.parse('http://localhost:5000/favorites/');
+    final url = Uri.parse('$baseUrl/favorites/');
     final body = json.encode({
       'recipeId': meal.id,
       'title': meal.name,
@@ -195,7 +197,7 @@ class ApiService extends ChangeNotifier {
     _isFavoriteButtonDisabled = true;
     notifyListeners();
    
-    final url = Uri.parse('http://localhost:5000/favorites/${meal.id}');
+    final url = Uri.parse('$baseUrl/favorites/${meal.id}');
 
     final response = await http.delete(url);
 
@@ -222,7 +224,7 @@ Future<void> addNoteToMeal(String mealId, String note) async {
     throw Exception('No Id found in session');
   }
 
-  final url = Uri.parse('http://localhost:5000/favorites/$mealId/$userId'); 
+  final url = Uri.parse('$baseUrl/favorites/$mealId/$userId'); 
 
   final body = json.encode({
     'note': note,  
@@ -252,7 +254,7 @@ Future<void> addNoteToMeal(String mealId, String note) async {
   if (userId == null) {
     throw Exception('No Id found in session');
   }
-  final url = Uri.parse('http://localhost:5000/favorites/$mealId/$userId'); 
+  final url = Uri.parse('$baseUrl/favorites/$mealId/$userId'); 
   final response = await http.get(url);
  notifyListeners();
   if (response.statusCode == 200) {
@@ -267,7 +269,7 @@ Future<void> addNoteToMeal(String mealId, String note) async {
  
 Future<void> deleteNoteFromMeal(String mealId, String userId, int noteIndex) async {
   final response = await http.delete(
-    Uri.parse('http://localhost:5000/favorites/$mealId/$userId/note/$noteIndex'),
+    Uri.parse('$baseUrl/favorites/$mealId/$userId/note/$noteIndex'),
     headers: <String, String>{
       'Content-Type': 'application/json',
     },
@@ -283,7 +285,7 @@ Future<void> updateNoteForMeal(String mealId, int noteIndex, String newNote) asy
  
   final userId = await getIdFromSession();
   final response = await http.put(
-    Uri.parse('http://localhost:5000/favorites/$mealId/$userId/note/$noteIndex'),
+    Uri.parse('$baseUrl/favorites/$mealId/$userId/note/$noteIndex'),
     headers: <String, String>{
       'Content-Type': 'application/json',
     },

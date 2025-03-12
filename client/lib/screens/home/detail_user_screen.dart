@@ -6,6 +6,7 @@ import '../../models/meal.dart';
 import '../../services/api_service.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 class DetailScreen extends StatefulWidget {
   final Meal meal;
@@ -23,6 +24,7 @@ class _DetailScreenState extends State<DetailScreen> {
   // ignore: non_constant_identifier_names
   TextEditingController OGnoteController = TextEditingController();
   int? _editingNoteIndex;
+  static final String baseUrl = dotenv.env['BASE_URL'] ?? "http://localhost:5000";
 
   void _launchURL(String url) async {
     final Uri uri = Uri.parse(url);
@@ -41,7 +43,7 @@ class _DetailScreenState extends State<DetailScreen> {
       throw Exception('No Id found in session');
     }
 
-    final url = Uri.parse('http://localhost:5000/favorites/$mealId/$userId');
+    final url = Uri.parse('$baseUrl/favorites/$mealId/$userId');
     final response = await http.get(url);
 
     if (response.statusCode == 200) {
@@ -228,7 +230,7 @@ class _DetailScreenState extends State<DetailScreen> {
     final noteId = editingNoteIndex;
     final response = await http.put(
       Uri.parse(
-          'http://localhost:5000/favorites/${widget.meal.id}/$userId/note/$noteId'),
+          '$baseUrl/favorites/${widget.meal.id}/$userId/note/$noteId'),
       headers: {'Content-Type': 'application/json'},
       body: json.encode({
         'note': updatedNote,
@@ -253,7 +255,7 @@ class _DetailScreenState extends State<DetailScreen> {
     }
     final noteToDelete = _notes[index];
     final response = await http.delete(
-      Uri.parse('http://localhost:5000/favorites/$meal/$userId/note/$index'),
+      Uri.parse('$baseUrl/favorites/$meal/$userId/note/$index'),
       body: json.encode({
         'note': noteToDelete,
       }),

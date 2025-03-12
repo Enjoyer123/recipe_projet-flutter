@@ -4,6 +4,7 @@ import 'package:http/http.dart' as http;
 import 'dart:convert';
 import '../home/home_screen.dart';
 import 'register_screen.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -17,6 +18,7 @@ class _LoginScreenState extends State<LoginScreen> {
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
   bool isLoading = false;
+  static final String baseUrl = dotenv.env['BASE_URL'] ?? "http://localhost:5000";
 
   @override
   void initState() {
@@ -38,7 +40,8 @@ class _LoginScreenState extends State<LoginScreen> {
 
   Future<void> _login() async {
     setState(() => isLoading = true);
-    const String apiUrl = "http://localhost:5000/user/login";
+    final String apiUrl = "$baseUrl/user/login";
+     
     final response = await http.post(
       Uri.parse(apiUrl),
       headers: {"Content-Type": "application/json"},
